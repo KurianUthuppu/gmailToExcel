@@ -1,4 +1,4 @@
-# gmail_To_Excel
+# gmail_To_Excel (Work-In-Progress)
 Run in an hourly manner to capture details from emails being sent with a specific subject which gets labelled and then write it into an associated excel file & send reply to the user, and finally putting a completed label on the specific email
 - In this specific context, I am trying to capture details such as 'customer', 'requirements', 'purpose' raised by the users via email with the subject 'Requirement'
 
@@ -70,4 +70,28 @@ function main_emailDataToSpreadsheet() {
     rid = 1;
     rid_cell.setValue(rid).setNumberFormat("000000");
     } 
+```
+
+#### Getting the message body and attachments
+- Assigning the first message in the thread to the variable
+- Declare variables to capture the message body and attachments
+```
+var thread = threads[t];
+
+// Gets the message body
+var message = thread.getMessages()[0];
+var content = thread.getMessages()[0].getPlainBody();
+var attachments = message.getAttachments();
+```
+
+#### Writing date and username/email-id to the excel sheet
+```
+ // Add message to sheet 
+ date_cell = sheet.getRange(lr+1, 2)
+ date_cell.setValue(message.getDate());
+    
+ username = message.getFrom();
+
+ from_cell = sheet.getRange(lr+1, 3)
+ from_cell.setValue(username);
 ```
