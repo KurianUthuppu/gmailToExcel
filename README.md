@@ -95,3 +95,72 @@ var attachments = message.getAttachments();
  from_cell = sheet.getRange(lr+1, 3)
  from_cell.setValue(username);
 ```
+
+#### Capturing the requisite phrases shared by the user
+- Regexp formula is used to match with the 'catch' (Word to be matched) word and then extract the content shared by used against the same
+- "i" is used to make the formula case insensitive
+- The same formula is repeated to capture other relevant content including requirement, purpose etc:-
+```
+    regExp = new RegExp("(?<=" + "Customer:" + ").*","i");
+    customer = content.match(regExp);
+    if (customer === null){
+      customer = '';
+    } else {
+      customer = customer.toString().trim();
+      customer_cell = sheet.getRange(lr+1, 4);
+      customer_cell.setValue(customer);
+    }
+```
+
+#### Saving the attachments in the requisite folder
+- Retrieve all the attachments
+- Store the attachments with the requisite filename in the rquisite folder
+- Setting the requisite access permissions for the file
+```
+    var root = DriveApp.getRootFolder();
+
+    for(var k in attachments){
+      var attachment = attachments[k];
+      var isDefinedType = checkIfDefinedType_(attachment);
+      if(!isDefinedType) continue;
+      var attachmentBlob = attachment.copyBlob();
+      var file = DriveApp.createFile(attachmentBlob).setName('SR_'+rid+'-'+k+'_'+username);
+      parentFolder.addFile(file);
+      stored_file = DriveApp.getFolderById('1ABOsBXogYYcsJC0nqtIyHbfAslhLM-Z9').getFilesByName(file);
+
+    // Get the id of the saved attachment
+    while (stored_file.hasNext()) {
+      var file = stored_file.next();
+      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+      image_file_id = file.getId();
+    };
+```
+
+#### Writing the saved filename link to the excel sheet
+- Write the link to the file in the excel
+```
+   image_link = 'https://drive.google.com/file/d/'+image_file_id+'/view';
+
+    attachment_cell = sheet.getRange(lr+1, i+7);
+    attachment_cell.setValue(image_link);
+    root.removeFile(file);
+    i += 1;
+    
+    }
+```
+
+#### Replying back to the email request
+- Using the noReply option to reply back in the same email 
+```
+    message.replyAll("",{
+    htmlBody: "Hello,<br/>We have recieved your requirement with the below details:"
+    +"<br/><b>Customer</b>: "+customer+"<br/><b>Requirement</b>: "+requirement+"<br/><b>Purpose</b>: "+purpose
+    +"<br/><b>Attachment</b>: "+attachment_Status
+    +"<br/><br/><b>RID</b>: "+ Utilities.formatString("%06d", rid)+"<br/> Please save this RID (Requirement Id) for any future correspondence."
+    +"<br/><br/>Now you please sit back, relax and enjoy your day as the team has started to cook your requirement right away..!"
+    +"<br/><br/>Regards,<br/>SPEG Team",
+    noReply: true
+    })
+```
+
+You may find the full script in the file - Gmail2Excel 
