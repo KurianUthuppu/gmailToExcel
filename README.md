@@ -164,3 +164,7 @@ var attachments = message.getAttachments();
 ```
 
 You may find the full script in the file - Gmail2Excel 
+Further, relevant pics have been uploaded in the folder that shows the:
+ - Email acknowledgement received
+ - Updated excel file
+ - Attachment upload to the google drive folder
