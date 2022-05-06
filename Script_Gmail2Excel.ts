@@ -3,7 +3,7 @@
 // Globals, constants
 var LABEL_PENDING = "pending_requirement";
 var LABEL_DONE = "done_requirement";
-var parentFolder = DriveApp.getFolderById('1FGOsBXofYYcsJC0nqtIzHbfAslhLK-P2')
+var parentFolder = DriveApp.getFolderById('1KGOsAXofZZasJC0nqtOzHbfBslhLR-P9')
 var fileTypesToExtract = ['jpg', 'jpeg', 'tif', 'png', 'gif', 'bmp', 'svg'];
 
 // processPending(sheet)
@@ -95,7 +95,7 @@ function processPending_(sheet) {
       var attachmentBlob = attachment.copyBlob();
       var file = DriveApp.createFile(attachmentBlob).setName('SR_'+rid+'-'+k+'_'+username);
       parentFolder.addFile(file);
-      stored_file = DriveApp.getFolderById('1FGOsBXofYYcsJC0nqtIzHbfAslhLK-P2').getFilesByName(file);
+      stored_file = DriveApp.getFolderById('1ABOsBXogYYcsJC0nqtIyHbfAslhLM-Z9').getFilesByName(file);
 
     // Get the id of the saved attachment
     while (stored_file.hasNext()) {
